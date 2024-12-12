@@ -25,7 +25,7 @@ def configure_logging(level=logging.INFO):
 APP_ENV = os.getenv('APP_ENV')
 BASE_DIR = Path.cwd()
 WORKDIR = BASE_DIR / 'bot'
-PERSISTENCE_FILE = 'persistence.json'
+PERSISTENCE_FILE = 'persistence.pickle'
 
 # Telegram-бот
 BOT_TOKEN = os.getenv('BOT_TOKEN')

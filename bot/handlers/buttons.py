@@ -26,7 +26,7 @@ async def process_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await set_ready(current_user, ReadyMessage(game, day), context)
     elif command == UNREADY:
         await set_unready(user, ReadyMessage(game, day), context)
-    else:
+    elif context.chat_data[day][game].get(user):
         context.chat_data[day][game][user][command] = not context.chat_data[day][game][user][command]
     await show_one_game(game, day, update, context)
 

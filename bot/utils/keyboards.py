@@ -2,7 +2,7 @@ import logging
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from bot.config import aliases, READY_FROM, READY, UNREADY
+from bot.config import aliases, READY_FROM, READY, UNREADY, CHECKED
 
 logger = logging.getLogger(__name__)
 
@@ -24,11 +24,11 @@ def _make_user_rows(username: str,
     hours = list(aliases[READY_FROM].keys())
     buttons_1st_row = [InlineKeyboardButton(username, callback_data=f'{callback_prefix}&{UNREADY}')]
     buttons_1st_row += [
-        InlineKeyboardButton(hour + '✔' * time_dict[hour], callback_data=f'{callback_prefix}&{hour}')
+        InlineKeyboardButton(hour + CHECKED * time_dict[hour], callback_data=f'{callback_prefix}&{hour}')
         for hour in hours[:2]
     ]
     buttons_2nd_row = [
-        InlineKeyboardButton(hour + '✔' * time_dict[hour], callback_data=f'{callback_prefix}&{hour}')
+        InlineKeyboardButton(hour + CHECKED * time_dict[hour], callback_data=f'{callback_prefix}&{hour}')
         for hour in hours[2:]
     ]
 

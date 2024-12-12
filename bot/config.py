@@ -61,4 +61,6 @@ AMOUNTS = [
     'три'
 ]
 
+CHECKED = '✅'
+
 TIMESTAMP = '%d.%m.%Y'

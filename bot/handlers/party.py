@@ -65,7 +65,7 @@ async def show_one_game(game: str, day: str, update: Update, context: ContextTyp
             f'\n'
             f'Нажми на кнопки с тем временем, в которое ты готов играть.\n'
             f'Нажми еще раз, чтобы снять отметку.\n'
-            f'Нажми на свой username, чтобы выйти из пати.\n')
+            f'Нажми на свой ник, чтобы выйти из пати.\n')
     keyboard = make_inline_keyboard(context.chat_data[day][game], f'{CALLBACK_PREFIX}{day}&{game}')
     query = update.callback_query
     if query:

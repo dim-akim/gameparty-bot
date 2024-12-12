@@ -37,8 +37,6 @@ COMMAND_HANDLERS = {
 
 
 def run_gameparty_bot():
-    """Запускает бота @help_admin_1060_bot
-    """
     app = ApplicationBuilder().token(
         config.ECHO_TOKEN if config.APP_ENV == 'dev' else config.BOT_TOKEN
     ).persistence(

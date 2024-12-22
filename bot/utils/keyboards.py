@@ -2,34 +2,32 @@ import logging
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from bot.config import aliases, READY_FROM, READY, UNREADY, CHECKED
+from bot.config import aliases, FROM, UNTIL, READY, UNREADY, CHECKED, PLUS, MINUS
+from bot.utils.models import ReadyTime
 
 logger = logging.getLogger(__name__)
 
 
-def make_inline_keyboard(game_dict: dict[str, dict],
+def make_inline_keyboard(party: dict[str, ReadyTime],
                          callback_prefix: str = '') -> InlineKeyboardMarkup | None:
-    keyboard = [[InlineKeyboardButton('Присоединиться', callback_data=f'{callback_prefix}&&{READY}')]]
-    if len(game_dict) > 0:
-        for username, time_dict in game_dict.items():
-            keyboard.extend(_make_user_rows(username, time_dict, f'{callback_prefix}&{username}'))
+    keyboard = [[InlineKeyboardButton('ready', callback_data=f'{callback_prefix}&&{READY}'),
+                InlineKeyboardButton(f'{MINUS}', callback_data=f'{callback_prefix}&&{MINUS}'),
+                InlineKeyboardButton(f'{PLUS}', callback_data=f'{callback_prefix}&&{PLUS}')]]
+    if len(party) > 0:
+        for username, ready_time in party.items():
+            keyboard.append(_make_user_row(username, ready_time, f'{callback_prefix}&{username}'))
 
-    logger.debug(f'Constructed {keyboard} from {game_dict}')
+    logger.debug(f'Constructed {keyboard} from {party}')
     return InlineKeyboardMarkup(keyboard)
 
 
-def _make_user_rows(username: str,
-                    time_dict: dict[str, bool],
-                    callback_prefix: str = '') -> tuple[list[InlineKeyboardButton], list[InlineKeyboardButton]]:
-    hours = list(aliases[READY_FROM].keys())
-    buttons_1st_row = [InlineKeyboardButton(username, callback_data=f'{callback_prefix}&{UNREADY}')]
-    buttons_1st_row += [
-        InlineKeyboardButton(hour + CHECKED * time_dict[hour], callback_data=f'{callback_prefix}&{hour}')
-        for hour in hours[:2]
-    ]
-    buttons_2nd_row = [
-        InlineKeyboardButton(hour + CHECKED * time_dict[hour], callback_data=f'{callback_prefix}&{hour}')
-        for hour in hours[2:]
-    ]
+def _make_user_row(username: str,
+                   ready_time: ReadyTime,
+                   callback_prefix: str = '') -> list[InlineKeyboardButton]:
+    buttons = [InlineKeyboardButton(username, callback_data=f'{callback_prefix}&{UNREADY}'),
+               InlineKeyboardButton(text=f'c {ready_time.since} {CHECKED * (ready_time.changing == FROM)}',
+                                    callback_data=f'{callback_prefix}&{FROM}'),
+               InlineKeyboardButton(f'по {ready_time.until} {CHECKED * (ready_time.changing == UNTIL)}',
+                                    callback_data=f'{callback_prefix}&{UNTIL}')]
 
-    return buttons_1st_row, buttons_2nd_row
+    return buttons

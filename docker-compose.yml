@@ -2,6 +2,7 @@ name: gameparty
 
 services:
   bot:
+    container_name: gameparty-bot
     build: .
     restart: unless-stopped
     volumes:

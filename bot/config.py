@@ -36,22 +36,19 @@ SUPERUSER_USERNAME = os.getenv('SUPERUSER_USERNAME')
 
 CALLBACK_PREFIX = ''
 
+# Слова-псевдонимы
 ALIASES_FILE = 'aliases.json'
 with open(WORKDIR / ALIASES_FILE, encoding='utf-8') as file:
-    # with open(BASE_DIR / ALIASES_FILE) as file:
     aliases = json.load(file)
-    default_ready = aliases.pop('default')
 
-GAME, DAY, WEEKDAY, HOURS, READY_FROM = aliases.keys()
-READY_HOURS = 'ready_hours'
+DEFAULT = aliases.pop('default')
+NUMERALS = aliases.pop('numerals')
+GAME, DAY, WEEKDAY, TIME, OTHER = aliases.keys()
+FROM, UNTIL, AT, FOR, HOUR, HOURS = aliases[OTHER].keys()
+
 READY = 'ready'
 UNREADY = 'unready'
 NOT_RESOLVED = 'not_resolved'
-IGNORED = [
-    'в',
-    'на',
-    'c'
-]
 AMOUNTS = [
     '1',
     '2',
@@ -62,5 +59,7 @@ AMOUNTS = [
 ]
 
 CHECKED = '✅'
+PLUS = '➕'
+MINUS = '➖'
 
 TIMESTAMP = '%d.%m.%Y'

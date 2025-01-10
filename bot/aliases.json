@@ -3,7 +3,7 @@
     "game": "Counter Strike 2",
     "day": 0,
     "ready_from": 20,
-    "ready_until": 22
+    "ready_until": 24
   },
   "game": {
     "Counter Strike 2": ["кс", "cs", "кс2", "cs2"],

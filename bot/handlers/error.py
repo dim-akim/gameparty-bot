@@ -12,6 +12,10 @@ from bot import config
 logger = logging.getLogger(__name__)
 
 
+def class_to_dict(obj) -> dict:
+    return obj.__dict__
+
+
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Log the error and send a telegram message to notify the developer."""
     logger.error("Exception while handling an update:", exc_info=context.error)
@@ -25,7 +29,9 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
         f'<pre>update = {html.escape(json.dumps(update_str, indent=2, ensure_ascii=False))}</pre>'
     )
     message_with_context = (
-        f'<pre language="python">context.chat_data = {html.escape(str(context.chat_data))}</pre>'
+        f'<pre language="python">context.chat_data = '
+        f'{html.escape(json.dumps(context.chat_data, indent=2, ensure_ascii=False, default=class_to_dict))}'
+        f'</pre>'
     )
     message_with_traceback = f'<pre language="python">{html.escape(tb_string)}</pre>'
 

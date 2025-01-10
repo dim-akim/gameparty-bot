@@ -23,12 +23,13 @@ async def process_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     party = context.chat_data[day][game]
     if current_user not in party and command in (READY, PLUS, MINUS):
         await set_ready(current_user, ReadyMessage(game, day), context)
-    elif current_user in party and command == READY:
-        return
     elif command == UNREADY:
         await set_unready(user, ReadyMessage(game, day), context)
     elif current_user in party:
         ready_time: ReadyTime = context.chat_data[day][game].get(current_user)
+        if command == READY or command == ready_time.changing:
+            logger.info(f'Ignored: pressed `{command}` on {ready_time} by {current_user}')
+            return
         if command in (FROM, UNTIL):
             ready_time.changing = command
         elif command in (PLUS, MINUS):

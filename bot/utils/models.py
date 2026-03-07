@@ -73,7 +73,13 @@ class ReadyMessage:
         ready_until = message.ready_until
         if not ready_until and ready_from and message.ready_for:
             ready_until = ready_from + message.ready_for
-        ready_message = cls(game=message.game if message.game else DEFAULT['game'],
+        if message.game:
+            game = message.game
+        elif message.not_resolved:
+            game = message.not_resolved[0]
+        else:
+            game = DEFAULT['game']
+        ready_message = cls(game=game,
                             day=_make_datestr(message),
                             ready_from=ready_from,
                             ready_until=ready_until)

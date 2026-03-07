@@ -29,15 +29,25 @@ async def party_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 async def show_party(day: str, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     games = context.chat_data.get(day, {})
     if not games:
-        context.chat_data[day] = games
-        context.chat_data[day][DEFAULT[GAME]] = {}
-        return await show_one_game(DEFAULT[GAME], day, update, context)
+        # context.chat_data[day] = games
+        # context.chat_data[day][DEFAULT[GAME]] = {}
+        # return await show_one_game(DEFAULT[GAME], day, update, context)
+        logger.info(f'No party for now on day {day}')
+        text = (f'На {day} пока нет пати, все слишком слабые.\n'
+                '\n'
+                'Будь сильным игроком, жми /ready и погнали!')
+        await context.bot.send_message(
+            update.effective_chat.id,
+            text=text,
+            parse_mode=ParseMode.HTML
+        )
     for game in games:
-        await show_one_game(game, day, update, context)
+        if len(context.chat_data[day][game]) > 0:
+            await show_one_game(game, day, update, context)
 
 
 async def say_incorrect_day(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    logger.warning(f'{context.args} has not a valid day or weekday')
+    logger.warning(f'{context.args=} has not a valid day or weekday')
     text = ('Не могу разобрать, что за день такой:\n'
             f'{" ".join(context.args)}\n'
             '\n'

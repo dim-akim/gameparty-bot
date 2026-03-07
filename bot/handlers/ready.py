@@ -5,7 +5,7 @@ from telegram.ext import ContextTypes
 
 from bot.config import UNTIL
 from bot.utils.models import ReadyMessage, ResolvedMessage, ReadyTime
-from bot.handlers.party import show_party
+from bot.handlers.party import show_party, show_one_game
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,8 @@ async def ready(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         data[day][game] = {}
 
     await set_ready(update.effective_user.name, ready_message, context)
-    return await show_party(day, update, context)
+    return await show_one_game(game, day, update, context)
+    # return await show_party(day, update, context)
 
 
 async def unready(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

@@ -128,7 +128,7 @@ def _resolve(alias) -> tuple:
     return result
 
 
-def _resolve_numeral(alias) -> tuple:
+def _resolve_numeral(alias) -> tuple | None:
     for key, values in NUMERALS.items():
         if alias in values:
             return key
@@ -137,7 +137,7 @@ def _resolve_numeral(alias) -> tuple:
 def _make_datestr(message: ResolvedMessage) -> str:
     if message.day is not None:
         day = _make_datestr_from_number(message.day)
-    elif message.weekday:
+    elif message.weekday is not None:
         day = _make_datestr_from_number(message.weekday, True)
     else:
         day = _make_datestr_from_number(DEFAULT['day'])

@@ -147,7 +147,7 @@ def _make_datestr(message: ResolvedMessage) -> str:
 def _make_datestr_from_number(days: int, weekdays_mode: bool = False) -> str:
     if weekdays_mode:
         return _make_datestr_from_number((days - date.today().weekday() + 7) % 7)
-    return (date.today() + timedelta(days=days)).strftime(TIMESTAMP)
+    return str(date.today() + timedelta(days=days))
 
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ from telegram.ext import ContextTypes
 
 from bot.utils import (ReadyMessage, ResolvedMessage,
                        make_inline_keyboard, log_entry_with_several_lines, ReadyTime)
-from bot.config import TIMESTAMP, CALLBACK_PREFIX, DEFAULT, GAME, PLUS, MINUS
+from bot.config import TIMESTAMP, CALLBACK_PREFIX, DEFAULT, GAME, PLUS, MINUS, WEEKDAY, aliases
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ async def party_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         else:
             day = ReadyMessage.from_resolved(resolved).day
     else:
-        day = date.today().strftime(TIMESTAMP)
+        day = str(date.today())
     return await show_party(day, update, context)
 
 
@@ -33,7 +33,7 @@ async def show_party(day: str, update: Update, context: ContextTypes.DEFAULT_TYP
         # context.chat_data[day][DEFAULT[GAME]] = {}
         # return await show_one_game(DEFAULT[GAME], day, update, context)
         logger.info(f'No party for now on day {day}')
-        text = (f'На {day} пока нет пати, все слишком слабые.\n'
+        text = (f'На {_date_rus(day)} пока нет пати, все слишком слабые.\n'
                 '\n'
                 'Будь сильным игроком, жми /ready и погнали!')
         await context.bot.send_message(
@@ -66,8 +66,9 @@ async def say_incorrect_day(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 async def show_one_game(game: str, day: str, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info(log_entry_with_several_lines(update.effective_user, game, day, context))
     party = context.chat_data[day][game]
+    weekday = _make_weekday_str(day)
     players_amount = len(party)
-    text = (f'<code>Дата:    </code>{day}\n'
+    text = (f'<code>Дата:    </code>{_date_rus(day)} <b>{weekday}</b>\n'
             f'<code>Игра:    </code>{game}\n'
             f'\n'
             f'<code>Игроков: </code>{players_amount} из 5\n')
@@ -94,5 +95,20 @@ async def show_one_game(game: str, day: str, update: Update, context: ContextTyp
         )
 
 
+def _make_weekday_str(day: str):
+    weekday = date.fromisoformat(day).weekday()
+    return 'Сегодня' if weekday == date.today().weekday() else aliases[WEEKDAY][str(weekday)][0].capitalize()
+
+
+def _date_rus(day: str):
+    return date.fromisoformat(day).strftime(TIMESTAMP)
+
+
 def _get_start_time(party: dict[str, ReadyTime]):
     pass
+
+
+if __name__ == '__main__':
+    print(_make_weekday_str('2026-03-28'))
+    print(_make_weekday_str('2026-03-29'))
+    print(_make_weekday_str('2026-03-30'))
